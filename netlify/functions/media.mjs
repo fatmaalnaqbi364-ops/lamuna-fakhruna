@@ -1,0 +1,3 @@
+import { getStore } from '@netlify/blobs';
+export default async request=>{const id=new URL(request.url).searchParams.get('id');if(!id||!/^[a-f0-9-]{36}$/.test(id))return new Response('Not found',{status:404});const store=getStore('student-works');const entry=await store.get('entries/'+id,{type:'json'});if(!entry)return new Response('Not found',{status:404});const blob=await store.get('media/'+id',{type:'arrayBuffer'});if(!blob)return new Response('Not found',{status:404});return new Response(blob,{headers:{'Content-Type':entry.mime,'Cache-Control':'public, max-age=300','X-Content-Type-Options':'nosniff'}})};
+export const config={path:'/.netlify/functions/media'};
